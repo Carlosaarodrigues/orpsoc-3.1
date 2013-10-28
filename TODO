@@ -1,0 +1,41 @@
+--Simulators--
+
+--Boards--
+ordb2a
+atlys
+
+--Build tools--
+ISE
+Synplify
+icarus?
+
+Shorten opencores checkout message
+Document the internal API
+Read arguments from file
+Add glob support in CAPI (wildcards in src_files et. al.)
+Create UART over socket VPI module
+Switch to a better format (YAML?) for CAPI2
+Add checksums to cache
+Add use flag support
+Export IP-XACT data (for top-level generation with kactus2)
+Remove defines files from dbg
+Use(or1ktrace/libopcodes/opdis) in or1200-monitor for trace generation
+Check if cache is clean and revision is equal to core description
+Move generic cores to separate cores (intgen?, rom)
+Clean up include files
+Add checksum to local cores
+Run or1ksim test suite
+Add support for multiple versions of cores
+Add support for version requirement in dependencies
+Allow specifying multiple cores-root in orpsoc.conf
+
+--DONE--
+Support for patches (start with calling patch)
+Load test cases with $value$plusargs
+Quartus support
+Modelsim support
+Store patched copies in cache
+Create system installer
+Verilator support
+Create round-robin wishbone scheduler
+Add wishbone interconnect generator
