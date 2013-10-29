@@ -103,6 +103,7 @@ class Verilator(Simulator):
         
     def run(self, args):
         #TODO: Handle arguments parsing
+	print ("./Vorpsoc_top")
         utils.launch('./Vorpsoc_top',
                      args,
                      cwd=os.path.join(self.sim_root, 'obj_dir'))
