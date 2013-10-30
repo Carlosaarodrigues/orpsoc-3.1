@@ -32,9 +32,12 @@ class Verilator(Simulator):
             elif item == 'include_files':
                 self.include_files = items.get(item).split()
                 self.include_dirs  = list(set(map(os.path.dirname, self.include_files)))
+		print (list(set(map(os.path.dirname, self.include_files))))
                 
             elif item == 'tb_toplevel':
                 self.tb_toplevel = items.get(item)
+	    elif item == 'source_type':
+		self.src_type = items.get(item)
             else:
                 print("Warning: Unknown item '" + item +"' in verilator section")
 
@@ -69,8 +72,15 @@ class Verilator(Simulator):
         for src_file in self.verilog.src_files:
             f.write(os.path.abspath(src_file) + '\n')
         
-    def build(self):
+    def build(self): #choose build for source type
         super(Verilator, self).build()
+	if self.src_type == 'C':
+	    self.build_C()
+	elif self.src_type == 'systemC':
+	    self.build_SysC()
+
+
+    def build_C(self):
         args = ['-c']
         args += ['-I'+s for s in self.include_dirs]
         for src_file in self.src_files:
@@ -100,6 +110,31 @@ class Verilator(Simulator):
         utils.launch('make -f Vorpsoc_top.mk Vorpsoc_top',
                      cwd=os.path.join(self.sim_root, 'obj_dir'),
                      shell=True)
+
+    def build_SysC(self):
+        args = ['-c']
+        args += ['-I'+s for s in self.include_dirs]
+
+        f = os.popen("which perl")
+	perl_root = f.read()
+	f.close
+        if not perl_root:
+            print("Don't found PERL. Install!")
+            exit(1)
+
+        object_files = [os.path.splitext(os.path.basename(s))[0]+'.o' for s in self.src_files]
+	print(object_files)
+	cmd = os.path.join(self.verilator_root,'bin','verilator')
+	
+	os.chdir('build/or1200-generic/sim-verilator')
+
+	print('/usr/bin/perl ' + cmd + ' --sc' + ' -f ' + os.path.join(self.sim_root,self.verilator_file)+' --top-module '+ 'orpsoc_top'+' --trace')        
+	utils.launch('/usr/bin/perl ' + cmd + ' --sc' + ' -f ' + os.path.join(self.sim_root,self.verilator_file) + ' --top-module '+ 'orpsoc_top'+' --trace',shell=True)
+
+#        utils.launch('make -f Vorpsoc_top.mk Vorpsoc_top',
+ #                    cwd=os.path.join(self.sim_root, 'obj_dir'),
+  #                   shell=True)
+
         
     def run(self, args):
         #TODO: Handle arguments parsing
