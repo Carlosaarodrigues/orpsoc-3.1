@@ -130,6 +130,7 @@ class Verilator(Simulator):
 	#src_files
 	args = ['-I.']
 	args += ['-MMD']
+        args += ['-Iobj_dir']
         args += ['-I'+s for s in self.include_dirs]
 	args += ['-I'+os.path.join(self.verilator_root,'include')]
 	args += ['-I'+os.path.join(self.verilator_root,'include', 'vltstd')]	
