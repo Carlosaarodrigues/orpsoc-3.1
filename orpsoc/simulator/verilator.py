@@ -114,10 +114,13 @@ class Verilator(Simulator):
 
     def build_SysC(self):
 
+	object_files = [os.path.splitext(os.path.basename(s))[0]+'.o' for s in self.src_files]
+
 	#verilogue
 	try:
 	    cmd = os.path.join(self.verilator_root,'bin','verilator') 
-	    subprocess.check_call(['bash',cmd,'--sc','--exe','--top-module', 'orpsoc_top','-f',self.verilator_file]+[self.tb_toplevel]+self.verilator_options,
+	    subprocess.check_call(['bash',cmd,'--sc','--top-module', 'orpsoc_top','-f',self.verilator_file,'--exe']+
+				    [os.path.join(self.sim_root, s) for s in object_files]+[self.tb_toplevel]+self.verilator_options,
             			    cwd = os.path.join(self.sim_root),
 	    			    stderr = open(os.path.join(self.sim_root,'verilator.log'),'w'))
         except OSError:
@@ -126,29 +129,6 @@ class Verilator(Simulator):
         except subprocess.CalledProcessError:
             print("Error: Failed to compile. See " + os.path.join(self.sim_root,'verilator.log') + " for details")
             exit(1)
-
-	#src_files
-	args = ['-I.']
-	args += ['-MMD']
-        args += ['-Iobj_dir']
-        args += ['-I'+s for s in self.include_dirs]
-	args += ['-I'+os.path.join(self.verilator_root,'include')]
-	args += ['-I'+os.path.join(self.verilator_root,'include', 'vltstd')]	
-	args += ['-DVL_PRINTF=printf']
-	args += ['-DVM_TRACE=1']
-	args += ['-DVM_COVERAGE=0']
-	args += [os.getenv('SYSTEMC_CXX_FLAGS')]
-	args += ['-I'+os.getenv('SYSTEMC_INCLUDE')]
-	args += ['-Wno-deprecated']
-	args += [os.getenv('SYSTEMC_CXX_FLAGS')]
-	args += ['-c']
-
-        for src_file in self.src_files:
-            print("Compiling " + src_file)
-	    print(str(args) +str(['-o ' + os.path.splitext(os.path.basename(src_file))[0]])+str([src_file]))
-            utils.launch('g++',
-                         args + ['-o ' + os.path.splitext(os.path.basename(src_file))[0]]+ [src_file],
-                         cwd=self.sim_root)
 
 	#tb_toplevel
         utils.launch('make -f Vorpsoc_top.mk Vorpsoc_top',
