@@ -149,8 +149,7 @@ class Verilator(Simulator):
 	for src_file in self.src_files:
 	    print("Compiling " + src_file)
 	    utils.launch('g++',args + ['-o' + os.path.splitext(os.path.basename(src_file))[0]+'.o']+ [src_file],
-				cwd=self.sim_root,
-				stderr = open(os.path.join(self.sim_root,'src_files.log'),'w'))
+				cwd=self.sim_root)
 
 	#tb_toplevel
         utils.launch('make -f Vorpsoc_top.mk Vorpsoc_top',
