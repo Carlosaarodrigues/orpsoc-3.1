@@ -130,6 +130,28 @@ class Verilator(Simulator):
             print("Error: Failed to compile. See " + os.path.join(self.sim_root,'verilator.log') + " for details")
             exit(1)
 
+	 #src_files	
+	args = ['-I.']
+	args += ['-MMD']
+	args += ['-I'+s for s in self.include_dirs]
+	args += ['-Iobj_dir']
+	args += ['-I'+os.path.join(self.verilator_root,'include')]
+	args += ['-I'+os.path.join(self.verilator_root,'include', 'vltstd')]  
+	args += ['-DVL_PRINTF=printf']
+	args += ['-DVM_TRACE=1']
+	args += ['-DVM_COVERAGE=0']
+	args += [os.getenv('SYSTEMC_CXX_FLAGS')]
+	args += ['-I'+os.getenv('SYSTEMC_INCLUDE')]
+	args += ['-Wno-deprecated']
+	args += [os.getenv('SYSTEMC_CXX_FLAGS')]
+	args += ['-c']
+
+	for src_file in self.src_files:
+	    print("Compiling " + src_file)
+	    utils.launch('g++',args + ['-o' + os.path.splitext(os.path.basename(src_file))[0]+'.o']+ [src_file],
+				cwd=self.sim_root,
+				stderr = open(os.path.join(self.sim_root,'src_files.log'),'w'))
+
 	#tb_toplevel
         utils.launch('make -f Vorpsoc_top.mk Vorpsoc_top',
                      cwd=os.path.join(self.sim_root, 'obj_dir'),
