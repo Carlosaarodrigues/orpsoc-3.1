@@ -67,7 +67,7 @@ class Verilator(Simulator):
 
         for include_dir in self.verilog.include_dirs:
             f.write("+incdir+" + os.path.abspath(include_dir) + '\n')
-	f.write("+incdir+/home/carlos/tool/orpsoc-cores/cores/wb_bfm\n") #corrigir isto.
+	f.write("+incdir+/home/carlos/projecto/orpsoc-cores/cores/wb_bfm\n") #corrigir isto.
         for src_file in self.verilog.src_files:
             f.write(os.path.abspath(src_file) + '\n')
         
