@@ -14,6 +14,7 @@ class Verilator(Simulator):
         self.include_files = []
         self.include_dirs = []
         self.tb_toplevel = ""
+	self.src_type = 'C'
 
         if system.verilator is not None:
             self._load_dict(system.verilator)
@@ -77,7 +78,7 @@ class Verilator(Simulator):
 	elif self.src_type == 'systemC':
 	    self.build_SysC()
 	else:
-	    print("tipo de source nao identifica. ORPSOC-cores antigo!")
+	    print("Source type not available. 'C' or 'systemC'")
 	    exit(1)
 
     def build_C(self):
