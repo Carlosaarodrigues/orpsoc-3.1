@@ -15,6 +15,7 @@ class Verilator(Simulator):
         self.include_dirs = []
         self.tb_toplevel = ""
 	self.src_type = 'C'
+	self.define_file = []
 
         if system.verilator is not None:
             self._load_dict(system.verilator)
@@ -37,6 +38,8 @@ class Verilator(Simulator):
                 self.tb_toplevel = items.get(item)
 	    elif item == 'source_type':
 		self.src_type = items.get(item)
+	    elif item == 'define_file':
+		self.define_file = items.get(item)
             else:
                 print("Warning: Unknown item '" + item +"' in verilator section")
 
@@ -70,6 +73,22 @@ class Verilator(Simulator):
 	f.write("+incdir+/home/carlos/projecto/orpsoc-cores/cores/wb_bfm\n") #corrigir isto.
         for src_file in self.verilog.src_files:
             f.write(os.path.abspath(src_file) + '\n')
+	f.close()
+	#convert define file in verilog for C
+	if self.define_file:
+	    fV = open (os.path.join(self.sim_root,"../src",self.define_file),'r')
+	    fC = open (os.path.join(self.sim_root,os.path.splitext(os.path.basename(self.define_file))[0]+'.h'),'w')
+	    fC.write("//File auto-converted the Verilog to C. converted by ORPSOC//\n")
+	    fC.write("//source file --> " + os.path.join(self.sim_root,"../src",self.define_file)+"\n")
+	    for line in fV:
+		Sline=line.split('`define ',1)
+		if len(Sline) == 1:
+		   fC.write(Sline[0])
+		else:
+		   fC.write(Sline[0]+"#define "+Sline[1])
+	    fC.close
+	    fV.close
+
         
     def build(self): #choose build for source type
         super(Verilator, self).build()
