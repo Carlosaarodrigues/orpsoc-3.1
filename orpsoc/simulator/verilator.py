@@ -81,11 +81,11 @@ class Verilator(Simulator):
 	    fC.write("//File auto-converted the Verilog to C. converted by ORPSOC//\n")
 	    fC.write("//source file --> " + os.path.join(self.sim_root,"../src",self.define_file)+"\n")
 	    for line in fV:
-		Sline=line.split('`define ',1)
+		Sline=line.split('`',1)
 		if len(Sline) == 1:
 		   fC.write(Sline[0])
 		else:
-		   fC.write(Sline[0]+"#define "+Sline[1])
+		   fC.write(Sline[0]+"#"+Sline[1])
 	    fC.close
 	    fV.close
 
