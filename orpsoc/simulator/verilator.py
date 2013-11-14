@@ -74,10 +74,10 @@ class Verilator(Simulator):
         for src_file in self.verilog.src_files:
             f.write(os.path.abspath(src_file) + '\n')
 	f.close()
-	#convert define file in verilog for C
+	#converted verilog for C of define file
 	if self.define_file:
 	    fV = open (os.path.join(self.sim_root,"../src",self.define_file),'r')
-	    fC = open (os.path.join(self.sim_root,"bench/verilator/",os.path.splitext(os.path.basename(self.define_file))[0]+'.h'),'w')
+	    fC = open (os.path.join(os.path.dirname(os.path.join(self.sim_root,self.tb_toplevel)),os.path.splitext(os.path.basename(self.define_file))[0]+'.h'),'w')
 	    fC.write("//File auto-converted the Verilog to C. converted by ORPSOC//\n")
 	    fC.write("//source file --> " + os.path.join(self.sim_root,"../src",self.define_file)+"\n")
 	    for line in fV:
