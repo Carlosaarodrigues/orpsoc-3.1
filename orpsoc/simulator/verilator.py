@@ -70,7 +70,7 @@ class Verilator(Simulator):
 
         for include_dir in self.verilog.include_dirs:
             f.write("+incdir+" + os.path.abspath(include_dir) + '\n')
-	f.write("+incdir+/home/carlos/projecto/orpsoc-cores/cores/wb_bfm\n") #corrigir isto.
+
         for src_file in self.verilog.src_files:
             f.write(os.path.abspath(src_file) + '\n')
 	f.close()
@@ -164,7 +164,7 @@ class Verilator(Simulator):
 	args += ['-I'+os.getenv('SYSTEMC_INCLUDE')]
 	args += ['-Wno-deprecated']
 	args += [os.getenv('SYSTEMC_CXX_FLAGS')]
-	args += ['-c']
+	args += ['-c -g']
 
 	for src_file in self.src_files:
 	    print("Compiling " + src_file)
