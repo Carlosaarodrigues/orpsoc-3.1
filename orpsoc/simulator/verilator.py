@@ -164,7 +164,8 @@ class Verilator(Simulator):
 	args += ['-I'+os.getenv('SYSTEMC_INCLUDE')]
 	args += ['-Wno-deprecated']
 	args += [os.getenv('SYSTEMC_CXX_FLAGS')]
-	args += ['-c -g']
+	args += ['-c']
+	args += ['-g']
 
 	for src_file in self.src_files:
 	    print("Compiling " + src_file)
