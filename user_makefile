@@ -1,6 +1,6 @@
 vlt:
-	orpsoc sim --force --sim verilator or1200-generic -f /home/jts/sandbox/bld-orpsoc/sw/hello -d 
+	orpsoc sim --force --sim verilator or1200-generic -f /home/jts/sandbox/bld-orpsoc/sw/hello -d --vcd
 
 icarus:
-	orpsoc sim --force --sim icarus or1200-generic --vcd --or1k-elf-loader /home/jts/sandbox/bld-orpsoc/sw/hello
+	orpsoc sim --force --sim icarus or1200-generic --vcd --or1k-elf-load /home/jts/sandbox/bld-orpsoc/sw/hello
 
